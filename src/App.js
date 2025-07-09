@@ -1,59 +1,36 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import axios from 'axios';
 
-const API_BASE = 'https://tradingarea.onrender.com/api';
-
-function Home() {
+function App() {
   const [offers, setOffers] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios.get(`${API_BASE}/offers`)
-      .then(res => setOffers(res.data))
-      .catch(() => setOffers([]));
+    axios
+      .get('https://tradingarea.onrender.com/api/offers')
+      .then((res) => {
+        setOffers(res.data || []);
+      })
+      .catch((err) => {
+        console.error('Fehler beim Laden der Angebote:', err);
+        setOffers([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   return (
-    <div className="container">
-      <h2>Marktplatz</h2>
-      {offers.length === 0 ? (
-        <p>Keine Angebote gefunden.</p>
+    <div className="min-h-screen bg-gray-900 text-white p-4">
+      <h1 className="text-3xl font-bold mb-6 text-center">TradingArea – Skin-Angebote</h1>
+
+      {loading ? (
+        <p className="text-center">Lade Angebote...</p>
+      ) : offers.length === 0 ? (
+        <p className="text-center text-gray-400">Noch keine Angebote verfügbar.</p>
       ) : (
-        <ul>
-          {offers.map((offer, idx) => (
-            <li key={idx}>{offer.name} – {offer.price} Coins</li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
-}
-
-function Login() {
-  return (
-    <div className="container">
-      <h2>Steam Login</h2>
-      <a href="https://tradingarea.onrender.com/auth/steam">
-        <button>Mit Steam einloggen</button>
-      </a>
-    </div>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <nav style={{ padding: '1rem', backgroundColor: '#f0f0f0' }}>
-        <Link to="/" style={{ marginRight: '1rem' }}>Startseite</Link>
-        <Link to="/login">Login</Link>
-      </nav>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="*" element={<div>Seite nicht gefunden</div>} />
-      </Routes>
-    </Router>
-  );
-}
-
-export default App;
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {offers.map((offer) => (
+            <div key={offer.id} className="bg-gray-800 rounded-lg shadow p-4 hover:bg-gray-700 transition">
+              <h2 className="text-xl font-semibold mb-2">{offer.itemName || 'Unbenannter Skin'}</h2>
+              <p>Preis: {offer.price || 'k.A.'} Coins<
