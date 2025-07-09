@@ -6,31 +6,35 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get('https://tradingarea.onrender.com/api/offers')
-      .then((res) => {
-        setOffers(res.data || []);
-      })
-      .catch((err) => {
-        console.error('Fehler beim Laden der Angebote:', err);
+    const fetchOffers = async () => {
+      try {
+        const res = await axios.get('https://tradingarea.onrender.com/api/offers');
+        if (Array.isArray(res.data)) {
+          setOffers(res.data);
+        } else {
+          console.warn('Unerwartete Antwort:', res.data);
+          setOffers([]);
+        }
+      } catch (err) {
+        console.error('Fehler beim Laden:', err);
         setOffers([]);
-      })
-      .finally(() => {
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchOffers();
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">TradingArea – Skin-Angebote</h1>
+    <div style={{ backgroundColor: '#111', color: 'white', minHeight: '100vh', padding: '2rem' }}>
+      <h1 style={{ fontSize: '2rem', textAlign: 'center' }}>TradingArea – Skin-Angebote</h1>
 
       {loading ? (
-        <p className="text-center">Lade Angebote...</p>
+        <p style={{ textAlign: 'center' }}>Lade Angebote...</p>
       ) : offers.length === 0 ? (
-        <p className="text-center text-gray-400">Noch keine Angebote verfügbar.</p>
+        <p style={{ textAlign: 'center', color: '#888' }}>Keine Angebote gefunden.</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {offers.map((offer, index) => (
-            <div
-              key={index}
-
+        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
+          {offers.map((offer, i) => (
+            <div key={i} style={{ background: '#222', padding: '1
