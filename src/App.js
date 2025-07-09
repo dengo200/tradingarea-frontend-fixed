@@ -31,9 +31,6 @@ function App() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {offers.map((offer, index) => (
-            <div key={index} className="bg-gray-800 rounded-lg shadow p-4 hover:bg-gray-700 transition">
-              <h2 className="text-xl font-semibold mb-2">{offer.itemName || 'Unbenannter Skin'}</h2>
-              <p>Preis: {offer.price || 'k.A.'} Coins</p>
-              <p>Verkäufer: {offer.seller || 'Unbekannt'}</p>
-              {offer.tradeUrl && (
-                <a
+            <div
+              key={index}
+
