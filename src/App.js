@@ -35,6 +35,7 @@ function App() {
       ) : offers.length === 0 ? (
         <p style={{ textAlign: 'center', color: '#888' }}>Keine Angebote gefunden.</p>
       ) : (
-        <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))' }}>
-          {offers.map((offer, i) => (
-            <div key={i} style={{ background: '#222', padding: '1
+        <div style={{
+          display: 'grid',
+          gap: '
+
